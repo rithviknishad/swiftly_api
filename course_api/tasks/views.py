@@ -18,9 +18,6 @@ class StatusSerializer(ModelSerializer):
         exclude = ("created_by" , "external_id","deleted")
 
 class TaskSerializer(ModelSerializer):
-    board_object = BoardSerializer(source="board", read_only=True)
-    status_object = StatusSerializer(source="status" , read_only=True)
-    status = IntegerField(required=True, write_only=True)
     class Meta:
         model = Task
         exclude = ( "external_id","deleted")
