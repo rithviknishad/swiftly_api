@@ -322,11 +322,8 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "course_api API",
     "DESCRIPTION": "Documentation of API endpoints of course_api",
     "VERSION": "1.0.0",
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
-    "SERVERS": [
-        {"url": "https://127.0.0.1:8000", "description": "Local Development server"},
-        {"url": "https://tsapi.coronasafe.xyz", "description": "Production server"},
-    ],
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
+    "SERVERS": [],
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
