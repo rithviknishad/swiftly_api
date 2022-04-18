@@ -7,7 +7,6 @@ from course_api.tasks.models import Board, Status, Task
 from rest_framework.permissions import IsAuthenticated
 
 class BoardSerializer(ModelSerializer):    
-    
     class Meta:
         model = Board
         exclude = ("created_by" , "external_id","deleted")
@@ -51,10 +50,12 @@ class StatusViewset(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
+        board = get_object_or_404(Board.objects.filter(id=self.kwargs["boards_pk"] , created_by =self.request.user))
         serializer.save(created_by=self.request.user)
 
     def get_queryset(self):
-        return self.queryset.filter(created_by = self.request.user)
+        board = get_object_or_404(Board.objects.filter(id=self.kwargs["boards_pk"] , created_by =self.request.user))
+        return self.queryset.filter(board=board)
 
 class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
@@ -62,8 +63,6 @@ class TaskViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        print(self.kwargs)
-
         board = get_object_or_404(Board.objects.filter(id=self.kwargs["boards_pk"] , created_by =self.request.user))
         return self.queryset.filter(board=board)
 

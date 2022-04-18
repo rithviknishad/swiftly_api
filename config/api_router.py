@@ -17,12 +17,11 @@ else:
     router = SimpleRouter()
 
 router.register("users", UserViewSet)
-
-router.register("status" , StatusViewset)
 router.register("boards" , BoardViewset)
 
 board_nested_router = NestedSimpleRouter(router, r"boards", lookup="boards")
 
+board_nested_router.register("status" , StatusViewset)
 board_nested_router.register("tasks",TaskViewSet)
 
 app_name = "api"
