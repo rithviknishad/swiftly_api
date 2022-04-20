@@ -14,6 +14,7 @@ class Status(BaseModel):
     title = models.CharField(max_length=100)
     description = models.TextField()
     created_by = models.ForeignKey(User , on_delete=models.CASCADE , null=True,blank=True)
+    is_completed = models.BooleanField(default=False)
     board = models.ForeignKey(Board, on_delete=models.CASCADE, null=True,blank=True)
 
     def __str__(self):
