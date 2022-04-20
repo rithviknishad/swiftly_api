@@ -277,3 +277,4 @@ course_api/media/
 .env
 .envs/*
 !.envs/.local/
+db.sqlite3
