@@ -5,14 +5,14 @@ from course_api.users.models import User
 
 class Board(BaseModel):
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     created_by = models.ForeignKey(User , on_delete=models.CASCADE , null=True,blank=True)
     
     def __str__(self):
         return self.title
 class Status(BaseModel):
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     created_by = models.ForeignKey(User , on_delete=models.CASCADE , null=True,blank=True)
     is_completed = models.BooleanField(default=False)
     board = models.ForeignKey(Board, on_delete=models.CASCADE, null=True,blank=True)
@@ -22,7 +22,7 @@ class Status(BaseModel):
 
 class Task(BaseModel):
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     board = models.ForeignKey(Board , on_delete=models.CASCADE , null=True,blank=True)
     status = models.ForeignKey(Status , on_delete=models.CASCADE , null=True,blank=True)
 
