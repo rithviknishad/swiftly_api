@@ -36,12 +36,6 @@ class TaskSerializer(ModelSerializer):
         return validated_data
 
 
-class NestedTaskSerializer(StatusSerializer):
-    board_object = BoardSerializer(source="board", read_only=True)
-    status_object = StatusSerializer(source="status" , read_only=True)
-    status = IntegerField(required=True, write_only=True)
-
-
 class BoardViewset(ModelViewSet):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
@@ -68,11 +62,10 @@ class StatusViewset(ModelViewSet):
         return self.queryset.filter(board=board)
 
 
-class TaskViewSet(NestedSerializerMixin, ModelViewSet):
+class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
-    read_serializer_class = NestedTaskSerializer
 
     def get_queryset(self):
         board = get_object_or_404(Board.objects.filter(id=self.kwargs["boards_pk"] , created_by =self.request.user))
