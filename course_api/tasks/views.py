@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import ModelSerializer, IntegerField
 from rest_framework.exceptions import ValidationError
+from course_api.tasks.mixins import NestedSerializerMixin
 from course_api.tasks.models import Board, Status, Task
 from rest_framework.permissions import IsAuthenticated
 
@@ -11,10 +12,12 @@ class BoardSerializer(ModelSerializer):
         model = Board
         exclude = ("created_by" , "external_id","deleted")
 
+
 class StatusSerializer(ModelSerializer):
     class Meta:
         model = Status
         exclude = ("created_by" , "external_id","deleted")
+
 
 class TaskSerializer(ModelSerializer):
     class Meta:
@@ -33,6 +36,12 @@ class TaskSerializer(ModelSerializer):
         return validated_data
 
 
+class NestedTaskSerializer(StatusSerializer):
+    board_object = BoardSerializer(source="board", read_only=True)
+    status_object = StatusSerializer(source="status" , read_only=True)
+    status = IntegerField(required=True, write_only=True)
+
+
 class BoardViewset(ModelViewSet):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
@@ -43,6 +52,7 @@ class BoardViewset(ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(created_by = self.request.user)
+
 
 class StatusViewset(ModelViewSet):
     queryset = Status.objects.all()
@@ -57,10 +67,12 @@ class StatusViewset(ModelViewSet):
         board = get_object_or_404(Board.objects.filter(id=self.kwargs["boards_pk"] , created_by =self.request.user))
         return self.queryset.filter(board=board)
 
-class TaskViewSet(ModelViewSet):
+
+class TaskViewSet(NestedSerializerMixin, ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
+    read_serializer_class = NestedTaskSerializer
 
     def get_queryset(self):
         board = get_object_or_404(Board.objects.filter(id=self.kwargs["boards_pk"] , created_by =self.request.user))
