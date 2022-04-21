@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 
+from rest_framework import serializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import ModelSerializer, IntegerField
 from rest_framework.exceptions import ValidationError
@@ -20,8 +21,9 @@ class StatusSerializer(ModelSerializer):
 
 
 class TaskSerializer(ModelSerializer):
-
-    status = IntegerField(required=True)
+    board_object = BoardSerializer(source="board", read_only=True)
+    status_object = StatusSerializer(source="status" , read_only=True)
+    status = IntegerField(required=True, write_only=True)
 
     class Meta:
         model = Task
