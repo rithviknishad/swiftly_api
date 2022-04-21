@@ -20,6 +20,9 @@ class StatusSerializer(ModelSerializer):
 
 
 class TaskSerializer(ModelSerializer):
+
+    status = IntegerField(required=True, write_only=True)
+
     class Meta:
         model = Task
         exclude = ( "external_id","deleted")
