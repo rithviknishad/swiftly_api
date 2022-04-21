@@ -21,7 +21,7 @@ class StatusSerializer(ModelSerializer):
 
 class TaskSerializer(ModelSerializer):
 
-    status = IntegerField(required=True, write_only=True)
+    status = IntegerField(required=True)
 
     class Meta:
         model = Task
