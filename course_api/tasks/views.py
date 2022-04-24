@@ -59,12 +59,10 @@ class StatusViewset(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        board = get_object_or_404(Board.objects.filter(id=self.kwargs["boards_pk"] , created_by =self.request.user))
         serializer.save(created_by=self.request.user)
 
     def get_queryset(self):
-        board = get_object_or_404(Board.objects.filter(id=self.kwargs["boards_pk"] , created_by =self.request.user))
-        return self.queryset.filter(board=board)
+        return self.queryset.filter(created_by = self.request.user)
 
 
 class TaskViewSet(ModelViewSet):
